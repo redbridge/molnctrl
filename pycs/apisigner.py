@@ -10,8 +10,7 @@ class SignedAPICall(object):
         self.api_secret = api_secret
 
     def request(self, args):
-        args['api_key'] = self.api_key
-
+        args['apiKey'] = self.api_key
         self.params = []
         self._sort_request(args)
         self._create_signature()

@@ -1,25 +1,44 @@
 from cloudmonkey.precache import precached_verbs
 from connection import CSApi
-
+#
+# usage:
+# import pycs
+# cs = pycs.initialiee()
+#
+#
 __version__ = "0.1"
 
 def _create_api_method(cls, name, api_method):
     """ Create dynamic class methods based on the Cloudmonkey precached_verbs
     """
-    def _api_method(self, *args, **kwargs):
+    def _api_method(self, **kwargs):
         # lookup the command
-        print api_method
-        command = "dummyCommand"
+        command = api_method[0]
         if kwargs:
             return self._make_request(command, kwargs)
-        return self._make_request(command)
+        else:
+            kwargs = {}
+            return self._make_request(command, kwargs)
     _api_method.__doc__ = api_method[2]
     _api_method.__name__ = name
     setattr(cls, _api_method.__name__, _api_method)
 
 
-def initialize(api_host, api_key, api_secret):
+def initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=True):
+    """ Initializes the Cloudstack API
+        Accepts arguments: 
+            api_host (localhost)
+            api_port (443)
+            api_ssl (True)
+            api_key
+            api_secret
+    """
+    if api_ssl:
+        proto = "https"
+    else:
+        proto = "http"
+    api_url = "%s://%s:%s/client/api" % (proto, api_host, api_port)
     for verb, methods in precached_verbs.iteritems():
         for method in methods:
            _create_api_method(CSApi, "%s_%s" % (verb, method), methods[method])
-    return CSApi(api_host, api_key, api_secret)
+    return CSApi(api_url, api_key, api_secret)
