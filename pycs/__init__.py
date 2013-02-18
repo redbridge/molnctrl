@@ -3,7 +3,7 @@ from connection import CSApi
 #
 # usage:
 # import pycs
-# cs = pycs.initialiee()
+# cs = pycs.Initialize("apikey", "api_secret")
 #
 #
 __version__ = "0.1"
@@ -24,7 +24,7 @@ def _create_api_method(cls, name, api_method):
     setattr(cls, _api_method.__name__, _api_method)
 
 
-def initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=True):
+def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=True):
     """ Initializes the Cloudstack API
         Accepts arguments: 
             api_host (localhost)
