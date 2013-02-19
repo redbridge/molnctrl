@@ -1,9 +1,11 @@
+#!/usr/bin/env python
+# −*− coding: UTF−8 −*−
 from cloudmonkey.precache import precached_verbs
 from connection import CSApi
 #
 # usage:
-# import pycs
-# cs = pycs.Initialize("apikey", "api_secret")
+# import molnctrl
+# cs = molnctrl.Initialize("apikey", "api_secret")
 #
 #
 __version__ = "0.1"
