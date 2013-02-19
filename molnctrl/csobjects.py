@@ -28,10 +28,10 @@ class User(object):
             setattr(self, k, v)
     
     def __str__(self):
-        return "%s %s" % (self.__class__, self.name)
+        return "%s %s" % (self.__class__, self.username)
 
     def __repr__(self):
-        return "%s %s" % (self.__class__, self.name)
+        return "%s %s" % (self.__class__, self.username)
 
 class Keypair(object):
     def __init__(self, dictionary):

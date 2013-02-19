@@ -2,9 +2,9 @@
 
 from distutils.core import setup
 from setuptools import setup, find_packages
-from pycs import __version__
+from molnctrl import __version__
 
-name = 'pycs'
+name = 'molnctrl'
 version = __version__
 requires = ['cloudmonkey>=4.0']
 
@@ -13,7 +13,7 @@ setup(name = name,
       description = 'A simple Cloudstack API based on Cloudmonkey',
       author='Magnus Bengtsson',
       author_email='magnus.bengtsson@redbridge.se',
-      url='http://github/',
+      url='http://githubi.com/redbridge/molnctrl',
       install_requires = requires
       packages=['pycs'],
      )
