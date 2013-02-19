@@ -4,8 +4,13 @@ from cloudmonkey.precache import precached_verbs
 from connection import CSApi
 #
 # usage:
-# import molnctrl
-# cs = molnctrl.Initialize("apikey", "api_secret")
+# In [1]: import molnctrl
+# In [2]: csapi = molnctrl.Initialize("apikey", "api_secret", api_host='cloud.fqdn')
+# In [3]: accounts = csapi.list_accounts()
+# In [4]: len(accounts)
+# Out[4]: 1
+# In [5]: accounts
+# Out[5]: [<class 'molnctrl.csobjects.Account'> admin]
 #
 #
 __version__ = "0.1"
