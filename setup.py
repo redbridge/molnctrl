@@ -13,7 +13,7 @@ setup(name = name,
       description = 'A simple Cloudstack API based on Cloudmonkey',
       author='Magnus Bengtsson',
       author_email='magnus.bengtsson@redbridge.se',
-      url='http://githubi.com/redbridge/molnctrl',
-      install_requires = requires
+      url='http://github.com/redbridge/molnctrl',
+      install_requires = requires,
       packages=['pycs'],
      )
