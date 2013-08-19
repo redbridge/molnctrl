@@ -1,7 +1,9 @@
 #!/ usr/bin/env python
 # By: Kelcey Damage, 2012 & Kraig Amador, 2012
 import hashlib, hmac, string, base64, urllib
+import requests
 import json, urllib
+
 
 class SignedAPICall(object):
     def __init__(self, api_url, api_key, api_secret):
@@ -9,28 +11,38 @@ class SignedAPICall(object):
         self.api_key = api_key
         self.api_secret = api_secret
 
+    def remove_non_ascii(self, s): 
+        return "".join(i for i in s if ord(i)<128)
+
     def request(self, args):
         args['apiKey'] = self.api_key
-        self.params = []
-        self._sort_request(args)
-        self._create_signature()
-        self._build_post_request()
+        for k, v in args.iteritems():
+            args[k] = self.remove_non_ascii(v)
+        self._sign(args)
+        self._build_post_request(args)
+        return self._http_get()
 
-    def _sort_request(self, args):
-        keys = sorted(args.keys())
-        for key in keys:
-            self.params.append(key + '=' + urllib.quote_plus(args[key]))
+    def _sign(self, args):
+        params = zip(args.keys(), args.values())
+        params.sort(key=lambda k: str.lower(k[0]))
+        hash_str = "&".join(
+                    ["=".join(
+                        [str.lower(r[0]),
+                         str.lower(
+                                urllib.quote_plus(str(r[1]))
+                         ).replace("+", "%20")]
+                    ) for r in params]
+        )
+        signature = base64.encodestring(hmac.new(self.api_secret, 
+                                                 hash_str, 
+                                                 hashlib.sha1).digest()).strip()
+        self.signature = signature
 
-    def _create_signature(self):
-        self.query = '&'.join(self.params)
-        digest = hmac.new(
-            self.api_secret,
-            msg=self.query.lower(),
-            digestmod=hashlib.sha1).digest()
+    def _http_get(self):
+        response = requests.get(self.api_url, params=self.query, verify=False)
+        return response
 
-        self.signature = base64.b64encode(digest)
 
-    def _build_post_request(self):
-        self.query += '&signature=' + urllib.quote_plus(self.signature)
-        self.value = self.api_url + '?' + self.query
-
+    def _build_post_request(self, args):
+        args['signature'] = self.signature
+        self.query = args

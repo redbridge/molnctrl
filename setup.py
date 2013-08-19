@@ -6,7 +6,7 @@ from molnctrl import __version__
 
 name = 'molnctrl'
 version = __version__
-requires = ['cloudmonkey>=4.0']
+requires = ['requests']
 
 setup(name = name,
       version = version,
@@ -15,5 +15,5 @@ setup(name = name,
       author_email='magnus.bengtsson@redbridge.se',
       url='http://github.com/redbridge/molnctrl',
       install_requires = requires,
-      packages=['pycs'],
+      packages=['molnctrl'],
      )

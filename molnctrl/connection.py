@@ -1,6 +1,7 @@
 #!/ usr/bin/env python
 import string, base64, urllib, json, urllib, sys
-from cloudmonkey.precache import precached_verbs
+import requests
+from cache410 import apicache
 import csobjects
 from csexceptions import *
 from apisigner import SignedAPICall
@@ -10,24 +11,23 @@ class CSApi(SignedAPICall):
     def __init__(self, api_url, api_key, api_secret):
         super(CSApi, self).__init__(api_url, api_key, api_secret)
 
-    def _http_get(self):
-        response = urllib.urlopen(self.value)
-        return response.read()
 
     def _make_request(self, command, args):
         args['response'] = 'json'
         args['command'] = command
-        self.request(args)
-        data = self._http_get()
+        data = self.request(args)
+        data = data.json()
         # The response is of the format {commandresponse: actual-data}
         key = command.lower().strip('_') + "response"
-        data = json.loads(data)
         if data.has_key('errorresponse'):
-            raise ResponseError(data['errorresponse']['errorcode'], data['errorresponse']['errortext'])
+            if data.has_key('errorresponse'):
+                raise ResponseError(data['errorresponse']['errorcode'], data['errorresponse']['errortext'])
+        elif data.has_key(key) and data[key].has_key('errorcode'):
+            raise ResponseError(data[key]['errorcode'], data[key]['errortext'])
         try:
             return self._ret(data[key])
-        except:
-            print data
+        except Exception as e:
+            print "%s" % e
             raise Error()
 
     def _ret(self, ret):
@@ -40,12 +40,20 @@ class CSApi(SignedAPICall):
                         return True
                     else:
                         return False
-                else:
+                elif key == 'jobid':
+                    # This is a async call....
+                    # Should return a async object that can be checked or (re-)created
+                    ret['_cs_api'] = self
+                    return getattr(csobjects, 'AsyncJob')(ret)
+                elif isinstance(ret[key], list):
                     for item in ret[key]:
                         # Add the API connection to the object
-                        #try:
-                        item['_cs_api'] = self
-                        list_ret.append(getattr(csobjects, key.capitalize())(item))
-                        #except:
-                        #    return ret
+                        try:
+                            item['_cs_api'] = self
+                            list_ret.append(getattr(csobjects, key.capitalize())(item))
+                        except:
+                            return ret
+
+                else:
+                    return ret
         return list_ret

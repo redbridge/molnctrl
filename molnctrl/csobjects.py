@@ -21,7 +21,6 @@ class Account(object):
             user_list.append(getattr(sys.modules[__name__], 'User')(user))
         return user_list
 
-
 class User(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
@@ -32,6 +31,17 @@ class User(object):
 
     def __repr__(self):
         return "%s %s" % (self.__class__, self.username)
+
+class Template(object):
+    def __init__(self, dictionary):
+        for k,v in dictionary.items():
+            setattr(self, k, v)
+    
+    def __str__(self):
+        return "%s %s" % (self.__class__, self.name)
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.name)
 
 class Keypair(object):
     def __init__(self, dictionary):
@@ -52,12 +62,20 @@ class Sshkeypair(object):
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.name))
 
+class Zone(object):
+    def __init__(self, dictionary):
+        for k,v in dictionary.items():
+            setattr(self, k, v)
+    
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.name))
+
 class Virtualmachine(object):
     """ This class represents a virtual machine"""
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
-        self.is_running = self._is_running(self.state)
+        #self.is_running = self._is_running(self.state)
     
     def __str__(self):
         return "%s %s" % (self.__class__, self.instancename)
@@ -66,21 +84,24 @@ class Virtualmachine(object):
         return "%s %s" % (self.__class__, self.instancename)
 
     def start(self):
-        if not self._is_running:
-            self._cs_api.start_virtualmachine(id=self.id)
-            return True
+        self.update()
+        if not self.is_running:
+            obj = self._cs_api.start_virtualmachine(id=self.id)
+            return obj
         else:
             return False
 
     def stop(self):
-        if self._is_running:
-            self._cs_api.stop_virtualmachine(id=self.id)
-            return True
+        self.update()
+        if self.is_running:
+            obj = self._cs_api.stop_virtualmachine(id=self.id)
+            return obj
         else:
             return False
         
     def destroy(self):
-        if self._is_running:
+        self.update()
+        if self.is_running:
             raise VirtualMachineError("Cannot destroy a running vm") 
         else:
             self._cs_api.destroy_virtualmachine(id=self.id)
@@ -97,7 +118,9 @@ class Virtualmachine(object):
         self.is_running = self._is_running(vm.state)
 
     def _is_running(self, state):
+        #self.update()
         if state == "Running":
+            self.state = 'Running'
             return True
         else:
             return False
@@ -110,3 +133,34 @@ class Ostype(object):
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.description))
 
+class Template(object):
+    def __init__(self, dictionary):
+        for k,v in dictionary.items():
+            setattr(self, k, v)
+    
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.name))
+
+class AsyncJob(object):
+    def __init__(self, dictionary):
+        for k,v in dictionary.items():
+            setattr(self, k, v)
+    
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.jobid))
+
+    @property
+    def status(self):
+        async_status = self._cs_api.query_asyncjobresult(jobid=self.jobid)
+        jobstatus = async_status['jobstatus']
+        if jobstatus == 0:
+            return 'pending'
+        elif jobstatus == 1:
+            self.result = async_status['jobresult']
+            #getattr(sys.modules[__name__], result.keys()[0])(result)
+            return 'succeded'
+        elif jobstatus == 2:
+            self.result = async_status['jobresult']
+            return 'failed'
+        else:
+            return 'unkown'
