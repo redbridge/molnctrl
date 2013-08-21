@@ -2,6 +2,7 @@
 # −*− coding: UTF−8 −*−
 from cache410 import apicache
 from connection import CSApi
+from config import Config
 #
 # usage:
 # In [1]: import molnctrl
@@ -49,6 +50,8 @@ def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=
             api_key
             api_secret
     """
+    config = Config()
+
     if api_ssl:
         proto = "https"
     else:
