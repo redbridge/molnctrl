@@ -8,11 +8,11 @@ class Config(object):
         config_file = os.getenv('MOLN_CONF', '.moln.conf')
         for loc in os.curdir, os.path.expanduser("~"), os.environ.get('PWD'), '':
             if os.path.exists(os.path.join(loc,config_file)):
-            try:
-                config = ConfigParser.ConfigParser()
-                config.read(os.path.join(loc,config_file))
-                return config
-            except IOError:
-                config = None
-                return config
+                try:
+                    config = ConfigParser.ConfigParser()
+                    config.read(os.path.join(loc,config_file))
+                    return config
+                except IOError:
+                    config = None
+                    return config
 
