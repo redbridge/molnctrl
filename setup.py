@@ -10,7 +10,7 @@ requires = ['requests']
 
 setup(name = name,
       version = version,
-      description = 'A simple Cloudstack API based on Cloudmonkey',
+      description = 'A simple python Cloudstack API',
       author='Magnus Bengtsson',
       author_email='magnus.bengtsson@redbridge.se',
       url='http://github.com/redbridge/molnctrl',
