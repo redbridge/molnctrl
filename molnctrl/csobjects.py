@@ -54,6 +54,9 @@ class Keypair(object):
     def __repr__(self):
         return "%s %s" % (self.__class__, self.name)
 
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.name)
+
 class Sshkeypair(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
@@ -61,6 +64,9 @@ class Sshkeypair(object):
 
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.name))
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.name)
 
 class Zone(object):
     def __init__(self, dictionary):
@@ -70,18 +76,27 @@ class Zone(object):
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.name))
 
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.name)
+
 class Virtualmachine(object):
     """ This class represents a virtual machine"""
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
-        #self.is_running = self._is_running(self.state)
+        self.nics = self._get_nics(self.nic)
 
     def __str__(self):
         return "%s %s" % (self.__class__, self.instancename)
 
     def __repr__(self):
         return "%s %s" % (self.__class__, self.instancename)
+
+    def _get_nics(self, nics):
+        nic_list = []
+        for nic in nics:
+            nic_list.append(getattr(sys.modules[__name__], 'Nic')(nic))
+        return nic_list
 
     def start(self):
         self.update()
@@ -133,6 +148,9 @@ class Ostype(object):
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.description))
 
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.name)
+
 class Template(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
@@ -141,6 +159,93 @@ class Template(object):
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.name))
 
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.name)
+
+class Network(object):
+    def __init__(self, dictionary):
+        for k,v in dictionary.items():
+            setattr(self, k, v)
+        self.services = self._get_services(self.service)
+
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.name))
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.name)
+
+    def _get_services(self, services):
+        service_list = []
+        for service in services:
+            service_list.append(getattr(sys.modules[__name__], 'Service')(service))
+        return service_list
+
+
+class Service(object):
+    def __init__(self, dictionary):
+        for k,v in dictionary.items():
+            setattr(self, k, v)
+        try:
+            self.capabilities = self._get_capabilities(self.capability)
+        except:
+            pass
+
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.name))
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.name)
+
+    def _get_capabilities(self, capabilities):
+        capability_list = []
+        for capability in capabilities:
+            capability_list.append(getattr(sys.modules[__name__], 'Capability')(capability))
+        return capbility_list
+
+class Capability(object):
+    def __init__(self, dictionary):
+        for k,v in dictionary.items():
+            setattr(self, k, v)
+
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.name))
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.name)
+
+class Nic(object):
+    def __init__(self, dictionary):
+        for k,v in dictionary.items():
+            setattr(self, k, v)
+
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.ipaddress))
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.ipaddress)
+
+class Domain(object):
+    def __init__(self, dictionary):
+        for k,v in dictionary.items():
+            setattr(self, k, v)
+
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.name))
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.name)
+
+class Publicipaddress(object):
+    def __init__(self, dictionary):
+        for k,v in dictionary.items():
+            setattr(self, k, v)
+
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.ipaddress))
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.ipaddress)
+
 class AsyncJob(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
@@ -148,12 +253,15 @@ class AsyncJob(object):
 
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.jobid))
-    
+
     def get_result(self):
         while True:
             status = self.status
             if status == 'succeded':
-                return getattr(sys.modules[__name__], self.result.keys()[0].capitalize())(self.result.values()[0])
+                try:
+                    return getattr(sys.modules[__name__], self.result.keys()[0].capitalize())(self.result.values()[0])
+                except:
+                    return status
             elif status == 'pending':
                 time.sleep(2)
             elif status == 'failed':
@@ -163,13 +271,11 @@ class AsyncJob(object):
     @property
     def status(self):
         async_status = self._cs_api.query_asyncjobresult(jobid=self.jobid)
-        #jobstatus = async_status['jobstatus']
         jobstatus = async_status.jobstatus
         if jobstatus == 0:
             return 'pending'
         elif jobstatus == 1:
             self.result = async_status.jobresult
-            #return getattr(sys.modules[__name__], self.result.keys()[0].capitalize())(self.result.values()[0])
             return 'succeded'
         elif jobstatus == 2:
             self.result = async_status.jobresult
