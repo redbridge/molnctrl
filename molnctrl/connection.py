@@ -8,8 +8,8 @@ from apisigner import SignedAPICall
 
 
 class CSApi(SignedAPICall):
-    def __init__(self, api_url, api_key, api_secret):
-        super(CSApi, self).__init__(api_url, api_key, api_secret)
+    def __init__(self, api_url, api_key, api_secret, asyncblock):
+        super(CSApi, self).__init__(api_url, api_key, api_secret, asyncblock)
 
 
     def _make_request(self, command, args):
@@ -40,9 +40,10 @@ class CSApi(SignedAPICall):
                         return True
                     else:
                         return False
-                elif key == 'jobid':
+                elif ret.has_key('jobid'):
                     # This is a async call....
                     # Should return a async object that can be checked or (re-)created
+                    # or, if requested, block on async, self.asyncblock
                     ret['_cs_api'] = self
                     return getattr(csobjects, 'AsyncJob')(ret)
                 elif isinstance(ret[key], list):
@@ -52,7 +53,10 @@ class CSApi(SignedAPICall):
                             item['_cs_api'] = self
                             list_ret.append(getattr(csobjects, key.capitalize())(item))
                         except:
-                            return ret
+                            if ret.has_key('jobid'):
+                                return getattr(csobjects, 'AsyncJob')(ret) 
+                            else:
+                                return ret
 
                 else:
                     return ret

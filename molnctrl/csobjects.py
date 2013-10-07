@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # −*− coding: UTF−8 −*−
-import sys
+import sys, time
 from exceptions import *
 
 class Account(object):
@@ -14,7 +14,7 @@ class Account(object):
 
     def __repr__(self):
         return "%s %s" % (self.__class__, self.name)
-    
+
     def _get_users(self, users):
         user_list = []
         for user in users:
@@ -25,7 +25,7 @@ class User(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
-    
+
     def __str__(self):
         return "%s %s" % (self.__class__, self.username)
 
@@ -36,7 +36,7 @@ class Template(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
-    
+
     def __str__(self):
         return "%s %s" % (self.__class__, self.name)
 
@@ -47,7 +47,7 @@ class Keypair(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
-    
+
     def __str__(self):
         return "%s %s" % (self.__class__, self.name)
 
@@ -58,7 +58,7 @@ class Sshkeypair(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
-    
+
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.name))
 
@@ -66,7 +66,7 @@ class Zone(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
-    
+
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.name))
 
@@ -76,7 +76,7 @@ class Virtualmachine(object):
         for k,v in dictionary.items():
             setattr(self, k, v)
         #self.is_running = self._is_running(self.state)
-    
+
     def __str__(self):
         return "%s %s" % (self.__class__, self.instancename)
 
@@ -98,15 +98,15 @@ class Virtualmachine(object):
             return obj
         else:
             return False
-        
+
     def destroy(self):
         self.update()
         if self.is_running:
-            raise VirtualMachineError("Cannot destroy a running vm") 
+            raise VirtualMachineError("Cannot destroy a running vm")
         else:
             self._cs_api.destroy_virtualmachine(id=self.id)
             return True
-       
+
     @property
     def ostype(self):
         ostype = self._cs_api.list_ostypes(id=self.guestosid)
@@ -129,7 +129,7 @@ class Ostype(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
-    
+
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.description))
 
@@ -137,7 +137,7 @@ class Template(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
-    
+
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.name))
 
@@ -145,22 +145,34 @@ class AsyncJob(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
-    
+
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.jobid))
-
+    
+    def get_result(self):
+        while True:
+            status = self.status
+            if status == 'succeded':
+                return getattr(sys.modules[__name__], self.result.keys()[0].capitalize())(self.result.values()[0])
+            elif status == 'pending':
+                time.sleep(2)
+            elif status == 'failed':
+                return False
+            else:
+                return False
     @property
     def status(self):
         async_status = self._cs_api.query_asyncjobresult(jobid=self.jobid)
-        jobstatus = async_status['jobstatus']
+        #jobstatus = async_status['jobstatus']
+        jobstatus = async_status.jobstatus
         if jobstatus == 0:
             return 'pending'
         elif jobstatus == 1:
-            self.result = async_status['jobresult']
-            #getattr(sys.modules[__name__], result.keys()[0])(result)
+            self.result = async_status.jobresult
+            #return getattr(sys.modules[__name__], self.result.keys()[0].capitalize())(self.result.values()[0])
             return 'succeded'
         elif jobstatus == 2:
-            self.result = async_status['jobresult']
+            self.result = async_status.jobresult
             return 'failed'
         else:
-            return 'unkown'
+            return 'unknown'

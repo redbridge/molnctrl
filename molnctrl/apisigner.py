@@ -6,10 +6,11 @@ import json, urllib
 
 
 class SignedAPICall(object):
-    def __init__(self, api_url, api_key, api_secret):
+    def __init__(self, api_url, api_key, api_secret, asyncblock):
         self.api_url = api_url
         self.api_key = api_key
         self.api_secret = api_secret
+        self.asyncblock = asyncblock
 
     def remove_non_ascii(self, s): 
         return "".join(i for i in s if ord(i)<128)

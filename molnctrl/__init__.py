@@ -41,7 +41,7 @@ def _create_api_method(cls, name, api_method):
     setattr(cls, _api_method.__name__, _api_method)
 
 
-def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=True):
+def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=True, asyncblock=False):
     """ Initializes the Cloudstack API
         Accepts arguments: 
             api_host (localhost)
@@ -61,4 +61,4 @@ def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=
         if isinstance(methods, dict):
             for method in methods.iterkeys():
                 _create_api_method(CSApi, "%s_%s" % (verb, method), methods[method])
-    return CSApi(api_url, api_key, api_secret)
+    return CSApi(api_url, api_key, api_secret, asyncblock)
