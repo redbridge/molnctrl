@@ -180,7 +180,6 @@ class Network(object):
             service_list.append(getattr(sys.modules[__name__], 'Service')(service))
         return service_list
 
-
 class Service(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
@@ -225,6 +224,17 @@ class Nic(object):
         return "%s %s" % (self.__class__, self.ipaddress)
 
 class Domain(object):
+    def __init__(self, dictionary):
+        for k,v in dictionary.items():
+            setattr(self, k, v)
+
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.name))
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.name)
+
+class Serviceoffering(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
