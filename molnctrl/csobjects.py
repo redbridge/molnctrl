@@ -269,6 +269,7 @@ class AsyncJob(object):
             status = self.status
             if status == 'succeded':
                 try:
+                    self.result.values()[0]['_cs_api'] = self._cs_api
                     return getattr(sys.modules[__name__], self.result.keys()[0].capitalize())(self.result.values()[0])
                 except:
                     return status
