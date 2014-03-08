@@ -104,6 +104,8 @@ class Virtualmachine(CloudStackObject):
 class Ostype(CloudStackObject):
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.description))
+    def __repr__(self):
+        return repr("%s:%s" % (self.__class__, self.description))
     
 class Template(CloudStackObject):
     pass
