@@ -28,7 +28,11 @@ class Account(CloudStackObject):
         return user_list
 
 class User(CloudStackObject):
-    pass
+    def __str__(self):
+        return "%s %s" % (self.__class__, self.username)
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.username)
     
 class Template(CloudStackObject):
     pass
@@ -98,7 +102,8 @@ class Virtualmachine(CloudStackObject):
             return False
 
 class Ostype(CloudStackObject):
-    pass
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.description))
     
 class Template(CloudStackObject):
     pass
@@ -134,7 +139,12 @@ class Capability(CloudStackObject):
     pass
     
 class Nic(CloudStackObject):
-    pass
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.ipaddress))
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.ipaddress)
+
 
 class Domain(CloudStackObject):
     pass
@@ -143,7 +153,11 @@ class Serviceoffering(CloudStackObject):
     pass
 
 class Publicipaddress(CloudStackObject):
-    pass
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.ipaddress))
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.ipaddress)
 
 class AsyncJob(CloudStackObject):
     def __init__(self, dictionary):
