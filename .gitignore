@@ -1,2 +1,6 @@
 *.pyc
 *.swp
+virtualenv
+build
+dist
+molnctrl.egg-info
