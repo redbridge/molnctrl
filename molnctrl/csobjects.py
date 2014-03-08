@@ -3,17 +3,23 @@
 import sys, time
 from exceptions import *
 
-class Account(object):
+class CloudStackObject(object):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
-        self.users = self._get_users(self.user)
 
     def __str__(self):
         return "%s %s" % (self.__class__, self.name)
 
     def __repr__(self):
         return "%s %s" % (self.__class__, self.name)
+
+
+class Account(CloudStackObject):
+    def __init__(self, dictionary):
+        for k,v in dictionary.items():
+            setattr(self, k, v)
+        self.users = self._get_users(self.user)
 
     def _get_users(self, users):
         user_list = []
@@ -21,76 +27,27 @@ class Account(object):
             user_list.append(getattr(sys.modules[__name__], 'User')(user))
         return user_list
 
-class User(object):
-    def __init__(self, dictionary):
-        for k,v in dictionary.items():
-            setattr(self, k, v)
+class User(CloudStackObject):
+    pass
+    
+class Template(CloudStackObject):
+    pass
 
-    def __str__(self):
-        return "%s %s" % (self.__class__, self.username)
+class Keypair(CloudStackObject):
+    pass
 
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.username)
+class Sshkeypair(CloudStackObject):
+    pass
 
-class Template(object):
-    def __init__(self, dictionary):
-        for k,v in dictionary.items():
-            setattr(self, k, v)
+class Zone(CloudStackObject):
+    pass
 
-    def __str__(self):
-        return "%s %s" % (self.__class__, self.name)
-
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.name)
-
-class Keypair(object):
-    def __init__(self, dictionary):
-        for k,v in dictionary.items():
-            setattr(self, k, v)
-
-    def __str__(self):
-        return "%s %s" % (self.__class__, self.name)
-
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.name)
-
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.name)
-
-class Sshkeypair(object):
-    def __init__(self, dictionary):
-        for k,v in dictionary.items():
-            setattr(self, k, v)
-
-    def __str__(self):
-        return repr("%s:%s" % (self.__class__, self.name))
-
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.name)
-
-class Zone(object):
-    def __init__(self, dictionary):
-        for k,v in dictionary.items():
-            setattr(self, k, v)
-
-    def __str__(self):
-        return repr("%s:%s" % (self.__class__, self.name))
-
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.name)
-
-class Virtualmachine(object):
+class Virtualmachine(CloudStackObject):
     """ This class represents a virtual machine"""
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
         self.nics = self._get_nics(self.nic)
-
-    def __str__(self):
-        return "%s %s" % (self.__class__, self.instancename)
-
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.instancename)
 
     def _get_nics(self, nics):
         nic_list = []
@@ -140,39 +97,17 @@ class Virtualmachine(object):
         else:
             return False
 
-class Ostype(object):
-    def __init__(self, dictionary):
-        for k,v in dictionary.items():
-            setattr(self, k, v)
-
-    def __str__(self):
-        return repr("%s:%s" % (self.__class__, self.description))
-
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.name)
-
-class Template(object):
-    def __init__(self, dictionary):
-        for k,v in dictionary.items():
-            setattr(self, k, v)
-
-    def __str__(self):
-        return repr("%s:%s" % (self.__class__, self.name))
-
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.name)
-
-class Network(object):
+class Ostype(CloudStackObject):
+    pass
+    
+class Template(CloudStackObject):
+    pass
+    
+class Network(CloudStackObject):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
         self.services = self._get_services(self.service)
-
-    def __str__(self):
-        return repr("%s:%s" % (self.__class__, self.name))
-
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.name)
 
     def _get_services(self, services):
         service_list = []
@@ -180,7 +115,7 @@ class Network(object):
             service_list.append(getattr(sys.modules[__name__], 'Service')(service))
         return service_list
 
-class Service(object):
+class Service(CloudStackObject):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
@@ -189,74 +124,28 @@ class Service(object):
         except:
             pass
 
-    def __str__(self):
-        return repr("%s:%s" % (self.__class__, self.name))
-
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.name)
-
     def _get_capabilities(self, capabilities):
         capability_list = []
         for capability in capabilities:
             capability_list.append(getattr(sys.modules[__name__], 'Capability')(capability))
         return capbility_list
 
-class Capability(object):
-    def __init__(self, dictionary):
-        for k,v in dictionary.items():
-            setattr(self, k, v)
+class Capability(CloudStackObject):
+    pass
+    
+class Nic(CloudStackObject):
+    pass
 
-    def __str__(self):
-        return repr("%s:%s" % (self.__class__, self.name))
+class Domain(CloudStackObject):
+    pass
 
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.name)
+class Serviceoffering(CloudStackObject):
+    pass
 
-class Nic(object):
-    def __init__(self, dictionary):
-        for k,v in dictionary.items():
-            setattr(self, k, v)
+class Publicipaddress(CloudStackObject):
+    pass
 
-    def __str__(self):
-        return repr("%s:%s" % (self.__class__, self.ipaddress))
-
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.ipaddress)
-
-class Domain(object):
-    def __init__(self, dictionary):
-        for k,v in dictionary.items():
-            setattr(self, k, v)
-
-    def __str__(self):
-        return repr("%s:%s" % (self.__class__, self.name))
-
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.name)
-
-class Serviceoffering(object):
-    def __init__(self, dictionary):
-        for k,v in dictionary.items():
-            setattr(self, k, v)
-
-    def __str__(self):
-        return repr("%s:%s" % (self.__class__, self.name))
-
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.name)
-
-class Publicipaddress(object):
-    def __init__(self, dictionary):
-        for k,v in dictionary.items():
-            setattr(self, k, v)
-
-    def __str__(self):
-        return repr("%s:%s" % (self.__class__, self.ipaddress))
-
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self.ipaddress)
-
-class AsyncJob(object):
+class AsyncJob(CloudStackObject):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
             setattr(self, k, v)
