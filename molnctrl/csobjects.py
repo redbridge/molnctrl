@@ -46,6 +46,12 @@ class Sshkeypair(CloudStackObject):
 class Zone(CloudStackObject):
     pass
 
+class Iso(CloudStackObject):
+    pass
+
+class Instancegroup(CloudStackObject):
+    pass
+
 class Virtualmachine(CloudStackObject):
     """ This class represents a virtual machine"""
     def __init__(self, dictionary):
@@ -168,6 +174,9 @@ class AsyncJob(CloudStackObject):
 
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.jobid))
+    
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.jobid)
 
     def get_result(self):
         while True:
