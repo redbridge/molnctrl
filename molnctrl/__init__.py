@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # −*− coding: UTF−8 −*−
-from cache430 import apicache
+import os, pickle
+import cachemaker
 from connection import CSApi
 from config import Config
 #
@@ -14,7 +15,7 @@ from config import Config
 # Out[5]: [<class 'molnctrl.csobjects.Account'> admin]
 #
 #
-__version__ = "0.1"
+__version__ = "0.4"
 
 def _add_params_docstring(params):
     """ Add params to doc string
@@ -57,6 +58,29 @@ def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=
     else:
         proto = "http"
     api_url = "%s://%s:%s/client/api" % (proto, api_host, api_port)
+    try:
+        home = os.path.expanduser("~")
+        if os.path.exists(os.path.join(home, '.molnctrl_cache')):
+            apicache = pickle.load(open( os.path.join(home, '.molnctrl_cache'), "rb" ))
+        else:
+            method = {'description': u'lists all available apis on the server, provided by the Api Discovery plugin',
+             'isasync': False,
+             'name': u'listApis',
+             'params': [{'description': u'API name',
+               'length': 255,
+               'name': u'name',
+               'related': [],
+               'required': False,
+               'type': u'string'}],
+             'related': [],
+             'requiredparams': []}
+            _create_api_method(CSApi, "list_apis", method)
+            c = CSApi(api_url, api_key, api_secret, asyncblock) 
+            apicache = cachemaker.monkeycache(c.list_apis())
+            pickle.dump(apicache, open(os.path.join(home, '.molnctrl_cache'), "wb"))
+    except Exception as e:
+        pass
+
     for verb, methods in apicache.iteritems():
         if isinstance(methods, dict):
             for method in methods.iterkeys():

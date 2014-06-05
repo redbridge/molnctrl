@@ -1,0 +1,9 @@
+   Molnctrl
+   Copyright 2013-2014 RedBridge AB
+
+   This product includes software developed at
+   RedBridge AB.
+
+   This software contains code derived from the Apache CloudStack
+   Project. The API cache function is based on cachemaker.py in
+   Cloudmonkey.

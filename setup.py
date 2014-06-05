@@ -6,7 +6,9 @@ from molnctrl import __version__
 
 name = 'molnctrl'
 version = __version__
-requires = ['requests']
+requires = [
+    'requests>=1.2.3',
+]
 
 setup(name = name,
       version = version,
