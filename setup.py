@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 from molnctrl import __version__
 
 name = 'molnctrl'
-version = __version__
+version = '0.4.5'
 requires = [
     'requests',
 ]
