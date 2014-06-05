@@ -7,7 +7,7 @@ from molnctrl import __version__
 name = 'molnctrl'
 version = __version__
 requires = [
-    'requests>=1.2.3',
+    'requests',
 ]
 
 setup(name = name,
@@ -18,4 +18,17 @@ setup(name = name,
       url='http://github.com/redbridge/molnctrl',
       install_requires = requires,
       packages=['molnctrl'],
+      classifiers=[
+          'Development Status :: 3 - Alpha',
+          'Environment :: Console',
+          'Environment :: Other Environment',
+          'Intended Audience :: Developers',
+          'Intended Audience :: System Administrators',
+          'License :: OSI Approved :: Apache Software License',
+          'Operating System :: MacOS :: MacOS X',
+          'Operating System :: Microsoft :: Windows',
+          'Operating System :: POSIX',
+          'Programming Language :: Python',
+          'Topic :: Software Development :: Libraries :: Python Modules',
+          ],
      )
