@@ -33,7 +33,7 @@ from config import Config
 # Out[5]: [<class 'molnctrl.csobjects.Account'> admin]
 #
 #
-__version__ = "0.4.2"
+__version__ = "0.4.4"
 
 def _add_params_docstring(params):
     """ Add params to doc string

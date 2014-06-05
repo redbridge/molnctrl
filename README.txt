@@ -4,7 +4,7 @@ molnctrl - A Cloudstack python API client
 
 This is molnctrl a simple python Cloudstack API library.
 
-Usage:
+Usage::
 
     import molnctrl
     csapi = molnctrl.Initialize("apikey", "api_secret", api_host='cloud.fqdn')
@@ -12,6 +12,10 @@ Usage:
 
 Changelog
 =========
+
+* 0.4.3 2014-06-06 Packaging fixes
+
+* 0.4.2 2014-06-06 Packaging fixes
 
 * 0.4.1 2014-06-06 Fix a few bugs in the package includes and install_requires
 
