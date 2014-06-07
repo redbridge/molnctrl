@@ -1,14 +1,8 @@
 #!/usr/bin/env python
-
-from distutils.core import setup
 from setuptools import setup, find_packages
-from molnctrl import __version__
 
 name = 'molnctrl'
-version = '0.4.5'
-requires = [
-    'requests',
-]
+version = '0.4.7'
 
 setup(name = name,
       version = version,

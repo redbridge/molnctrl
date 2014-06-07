@@ -70,6 +70,9 @@ class Iso(CloudStackObject):
 class Instancegroup(CloudStackObject):
     pass
 
+class Router(CloudStackObject):
+    pass
+
 class Virtualmachine(CloudStackObject):
     """ This class represents a virtual machine"""
     def __init__(self, dictionary):

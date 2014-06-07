@@ -18,7 +18,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 """
-import os, pickle
+import os, pickle, tempfile
 import cachemaker
 from connection import CSApi
 from config import Config
@@ -75,9 +75,13 @@ def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=
         proto = "http"
     api_url = "%s://%s:%s/client/api" % (proto, api_host, api_port)
     try:
-        home = os.path.expanduser("~")
-        if os.path.exists(os.path.join(home, '.molnctrl_cache')):
-            apicache = pickle.load(open( os.path.join(home, '.molnctrl_cache'), "rb" ))
+        if os.access(os.path.expanduser("~") , os.W_OK):
+            d = os.path.expanduser("~")
+        else:
+            d = tempfile.gettempdir()
+        cache_file = os.getenv('MOLNCTRL_CACHE') or '.molnctrl_cache'
+        if os.path.exists(os.path.join(d, '.molnctrl_cache')):
+            apicache = pickle.load(open( os.path.join(d, cache_file), "rb" ))
         else:
             method = {'description': u'lists all available apis on the server, provided by the Api Discovery plugin',
              'isasync': False,
@@ -93,9 +97,9 @@ def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=
             _create_api_method(CSApi, "list_apis", method)
             c = CSApi(api_url, api_key, api_secret, asyncblock) 
             apicache = cachemaker.monkeycache(c.list_apis())
-            pickle.dump(apicache, open(os.path.join(home, '.molnctrl_cache'), "wb"))
+            pickle.dump(apicache, open(os.path.join(d, cache_file), "wb"))
     except Exception as e:
-        pass
+        print "Unable to create an api cache: %s" % e
 
     for verb, methods in apicache.iteritems():
         if isinstance(methods, dict):
