@@ -73,6 +73,16 @@ class Instancegroup(CloudStackObject):
 class Router(CloudStackObject):
     pass
 
+class Networkoffering(CloudStackObject):
+    pass
+
+class Remoteaccessvpn(CloudStackObject):
+    def __str__(self):
+        return "%s %s" % (self.__class__, self.publicip)
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.publicip)
+
 class Virtualmachine(CloudStackObject):
     """ This class represents a virtual machine"""
     def __init__(self, dictionary):

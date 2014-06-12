@@ -80,7 +80,7 @@ def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=
         else:
             d = tempfile.gettempdir()
         cache_file = os.getenv('MOLNCTRL_CACHE') or '.molnctrl_cache'
-        if os.path.exists(os.path.join(d, '.molnctrl_cache')):
+        if os.path.exists(os.path.join(d, cache_file)):
             apicache = pickle.load(open( os.path.join(d, cache_file), "rb" ))
         else:
             method = {'description': u'lists all available apis on the server, provided by the Api Discovery plugin',

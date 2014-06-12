@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 name = 'molnctrl'
-version = '0.4.7'
+version = '0.4.9'
 
 setup(name = name,
       version = version,

@@ -12,8 +12,9 @@ Usage::
 
 Changelog
 =========
+* 0.4.9 2014-06-12 Added more Cloudstack object classes
 
-* 0.4.3 2014-06-06 Packaging fixes
+* 0.4.8 2014-06-06 Packaging fixes
 
 * 0.4.2 2014-06-06 Packaging fixes
 
