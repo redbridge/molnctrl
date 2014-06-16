@@ -76,12 +76,25 @@ class Router(CloudStackObject):
 class Networkoffering(CloudStackObject):
     pass
 
+class Keypair(CloudStackObject):
+    pass
+
+class Vpc(CloudStackObject):
+    pass
+
 class Remoteaccessvpn(CloudStackObject):
     def __str__(self):
         return "%s %s" % (self.__class__, self.publicip)
 
     def __repr__(self):
         return "%s %s" % (self.__class__, self.publicip)
+
+class Vpnuser(CloudStackObject):
+    def __str__(self):
+        return "%s %s" % (self.__class__, self.username)
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.username)
 
 class Virtualmachine(CloudStackObject):
     """ This class represents a virtual machine"""
@@ -197,6 +210,21 @@ class Publicipaddress(CloudStackObject):
 
     def __repr__(self):
         return "%s %s" % (self.__class__, self.ipaddress)
+
+class Firewallrule(CloudStackObject):
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.ipaddress))
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.ipaddress)
+
+class Ipaddress(CloudStackObject):
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.ipaddress))
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.ipaddress)
+
 
 class AsyncJob(CloudStackObject):
     def __init__(self, dictionary):
