@@ -82,6 +82,9 @@ class Keypair(CloudStackObject):
 class Vpc(CloudStackObject):
     pass
 
+class Volume(CloudStackObject):
+    pass
+
 class Remoteaccessvpn(CloudStackObject):
     def __str__(self):
         return "%s %s" % (self.__class__, self.publicip)
@@ -204,6 +207,9 @@ class Domain(CloudStackObject):
 class Serviceoffering(CloudStackObject):
     pass
 
+class Loadbalancerrule(CloudStackObject):
+    pass
+
 class Publicipaddress(CloudStackObject):
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.ipaddress))
@@ -216,7 +222,7 @@ class Firewallrule(CloudStackObject):
         return repr("%s:%s" % (self.__class__, self.ipaddress))
 
     def __repr__(self):
-        return "%s %s" % (self.__class__, self.ipaddress)
+        return "%s %s:%s" % (self.__class__, self.ipaddress, self.startport)
 
 class Ipaddress(CloudStackObject):
     def __str__(self):
