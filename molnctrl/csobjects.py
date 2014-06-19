@@ -210,6 +210,14 @@ class Serviceoffering(CloudStackObject):
 class Loadbalancerrule(CloudStackObject):
     pass
 
+class Portforwardingrule(CloudStackObject):
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.ipaddress))
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.ipaddress)
+    
+
 class Publicipaddress(CloudStackObject):
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.ipaddress))

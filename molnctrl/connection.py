@@ -33,6 +33,15 @@ class CSApi(SignedAPICall):
     def _make_request(self, command, args):
         args['response'] = 'json'
         args['command'] = command
+        # Support tags like ...,tags={'key': 'value', 'key2': 'value2'}
+        if args.has_key('tags'):
+            if isinstance(args['tags'], dict):
+                i = 0
+                for k,v in args['tags'].iteritems():
+                    args['tags[%i].key' % i] = k
+                    args['tags[%s].value' % i] = v
+                    i += 1
+            args.pop('tags')
         data = self.request(args)
         data = data.json()
         # The response is of the format {commandresponse: actual-data}
@@ -75,7 +84,10 @@ class CSApi(SignedAPICall):
                                 return getattr(csobjects, 'AsyncJob')(ret) 
                             else:
                                 return ret
-
-                else:
-                    return ret
+                elif isinstance(ret[key], dict):
+                    try:
+                        ret[key]['_cs_api'] = self
+                        return getattr(csobjects, key.capitalize())(ret[key]) 
+                    except Exception as e:
+                        return ret
         return list_ret
