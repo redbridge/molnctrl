@@ -51,7 +51,7 @@ class User(CloudStackObject):
 
     def __repr__(self):
         return "%s %s" % (self.__class__, self.username)
-    
+
 class Template(CloudStackObject):
     pass
 
@@ -105,12 +105,20 @@ class Virtualmachine(CloudStackObject):
         for k,v in dictionary.items():
             setattr(self, k, v)
         self.nics = self._get_nics(self.nic)
+        self.tags = self._get_tags(self.tags)
 
     def _get_nics(self, nics):
         nic_list = []
         for nic in nics:
             nic_list.append(getattr(sys.modules[__name__], 'Nic')(nic))
         return nic_list
+
+    def _get_tags(self, tags):
+        tag_list = []
+        for tag in tags:
+            tag_list.append(getattr(sys.modules[__name__], 'Tag')(tag))
+        return tag_list
+
 
     def start(self):
         self.update()
@@ -159,10 +167,10 @@ class Ostype(CloudStackObject):
         return repr("%s:%s" % (self.__class__, self.description))
     def __repr__(self):
         return repr("%s:%s" % (self.__class__, self.description))
-    
+
 class Template(CloudStackObject):
     pass
-    
+
 class Network(CloudStackObject):
     def __init__(self, dictionary):
         for k,v in dictionary.items():
@@ -192,14 +200,13 @@ class Service(CloudStackObject):
 
 class Capability(CloudStackObject):
     pass
-    
+
 class Nic(CloudStackObject):
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.ipaddress))
 
     def __repr__(self):
         return "%s %s" % (self.__class__, self.ipaddress)
-
 
 class Domain(CloudStackObject):
     pass
@@ -216,7 +223,13 @@ class Portforwardingrule(CloudStackObject):
 
     def __repr__(self):
         return "%s %s" % (self.__class__, self.ipaddress)
-    
+
+class Tag(CloudStackObject):
+    def __str__(self):
+        return repr("%s:%s" % (self.__class__, self.key))
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.key)
 
 class Publicipaddress(CloudStackObject):
     def __str__(self):
@@ -247,7 +260,7 @@ class AsyncJob(CloudStackObject):
 
     def __str__(self):
         return repr("%s:%s" % (self.__class__, self.jobid))
-    
+
     def __repr__(self):
         return "%s %s" % (self.__class__, self.jobid)
 
