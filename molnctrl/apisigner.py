@@ -58,7 +58,7 @@ class SignedAPICall(object):
         self.signature = signature
 
     def _http_get(self):
-        response = requests.get(self.api_url, params=self.query, verify=False)
+        response = requests.get(self.api_url, params=self.query)
         return response
 
 
