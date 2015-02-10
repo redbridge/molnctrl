@@ -24,13 +24,15 @@ import json, urllib
 
 
 class SignedAPICall(object):
-    def __init__(self, api_url, api_key, api_secret, asyncblock):
+    def __init__(self, api_url, api_key, api_secret, asyncblock, timeout=10, req_method="get"):
         self.api_url = api_url
         self.api_key = api_key
         self.api_secret = api_secret
         self.asyncblock = asyncblock
+        self.timeout = timeout
+        self.req_method = req_method.lower()
 
-    def remove_non_ascii(self, s): 
+    def remove_non_ascii(self, s):
         return "".join(i for i in s if ord(i)<128)
 
     def request(self, args):
@@ -39,7 +41,10 @@ class SignedAPICall(object):
             args[k] = self.remove_non_ascii(v)
         self._sign(args)
         self._build_post_request(args)
-        return self._http_get()
+        if self.req_method == 'get':
+            return self._http_get()
+        else:
+            return self._http_post()
 
     def _sign(self, args):
         params = zip(args.keys(), args.values())
@@ -52,13 +57,17 @@ class SignedAPICall(object):
                          ).replace("+", "%20")]
                     ) for r in params]
         )
-        signature = base64.encodestring(hmac.new(self.api_secret, 
-                                                 hash_str, 
+        signature = base64.encodestring(hmac.new(self.api_secret,
+                                                 hash_str,
                                                  hashlib.sha1).digest()).strip()
         self.signature = signature
 
     def _http_get(self):
         response = requests.get(self.api_url, params=self.query)
+        return response
+
+    def _http_post(self):
+        response = requests.post(self.api_url, data=self.query)
         return response
 
 

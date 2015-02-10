@@ -26,9 +26,11 @@ from apisigner import SignedAPICall
 
 
 class CSApi(SignedAPICall):
-    def __init__(self, api_url, api_key, api_secret, asyncblock):
-        super(CSApi, self).__init__(api_url, api_key, api_secret, asyncblock)
+    def __init__(self, api_url, api_key, api_secret, asyncblock, timeout=10, req_method="get"):
+        super(CSApi, self).__init__(api_url, api_key, api_secret, asyncblock, timeout, req_method)
 
+    def __repr__(self):
+        return '<molnctrl: {0} [{1}]>'.format(self.api_url, self.req_method)
 
     def _make_request(self, command, args):
         args['response'] = 'json'

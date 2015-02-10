@@ -52,6 +52,7 @@ class User(CloudStackObject):
     def __repr__(self):
         return "%s %s" % (self.__class__, self.username)
 
+
 class Template(CloudStackObject):
     pass
 

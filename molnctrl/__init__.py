@@ -58,7 +58,7 @@ def _create_api_method(cls, name, api_method):
     setattr(cls, _api_method.__name__, _api_method)
 
 
-def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=True, asyncblock=False):
+def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=True, asyncblock=False, timeout=10, req_method="get"):
     """ Initializes the Cloudstack API
         Accepts arguments: 
             api_host (localhost)
@@ -95,7 +95,7 @@ def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=
              'related': [],
              'requiredparams': []}
             _create_api_method(CSApi, "list_apis", method)
-            c = CSApi(api_url, api_key, api_secret, asyncblock) 
+            c = CSApi(api_url, api_key, api_secret, asyncblock)
             apicache = cachemaker.monkeycache(c.list_apis())
             pickle.dump(apicache, open(os.path.join(d, cache_file), "wb"))
     except Exception as e:
@@ -105,4 +105,4 @@ def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=
         if isinstance(methods, dict):
             for method in methods.iterkeys():
                 _create_api_method(CSApi, "%s_%s" % (verb, method), methods[method])
-    return CSApi(api_url, api_key, api_secret, asyncblock)
+    return CSApi(api_url, api_key, api_secret, asyncblock, timeout, req_method)

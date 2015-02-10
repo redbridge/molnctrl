@@ -12,6 +12,8 @@ Usage::
 
 Changelog
 =========
+* 0.6.0 2015-02-10 Add support for POST
+
 * 0.5.1 2014-09-30 Remove verify=false in requests
 
 * 0.5.0 2014-07-31 Support for rbc-tools 0.1, the command line client for managing RedBridge Cloud.
