@@ -18,11 +18,14 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 """
+from __future__ import absolute_import
+from __future__ import print_function
 import string, base64, urllib, json, urllib, sys
 import requests
-import csobjects
-from csexceptions import *
-from apisigner import SignedAPICall
+from . import csobjects
+from .csexceptions import *
+from .apisigner import SignedAPICall
+import six
 
 
 class CSApi(SignedAPICall):
@@ -36,10 +39,10 @@ class CSApi(SignedAPICall):
         args['response'] = 'json'
         args['command'] = command
         # Support tags like ...,tags={'key': 'value', 'key2': 'value2'}
-        if args.has_key('tags'):
+        if 'tags' in args:
             if isinstance(args['tags'], dict):
                 i = 0
-                for k,v in args['tags'].iteritems():
+                for k,v in six.iteritems(args['tags']):
                     args['tags[%i].key' % i] = k
                     args['tags[%s].value' % i] = v
                     i += 1
@@ -48,15 +51,15 @@ class CSApi(SignedAPICall):
         data = data.json()
         # The response is of the format {commandresponse: actual-data}
         key = command.lower().strip('_') + "response"
-        if data.has_key('errorresponse'):
-            if data.has_key('errorresponse'):
+        if 'errorresponse' in data:
+            if 'errorresponse' in data:
                 raise ResponseError(data['errorresponse']['errorcode'], data['errorresponse']['errortext'])
-        elif data.has_key(key) and data[key].has_key('errorcode'):
+        elif key in data and 'errorcode' in data[key]:
             raise ResponseError(data[key]['errorcode'], data[key]['errortext'])
         try:
             return self._ret(data[key])
         except Exception as e:
-            print "%s" % e
+            print("%s" % e)
             raise Error()
 
     def _ret(self, ret):
@@ -69,7 +72,7 @@ class CSApi(SignedAPICall):
                         return True
                     else:
                         return False
-                elif ret.has_key('jobid'):
+                elif 'jobid' in ret:
                     # This is a async call....
                     # Should return a async object that can be checked or (re-)created
                     # or, if requested, block on async, self.asyncblock
@@ -82,7 +85,7 @@ class CSApi(SignedAPICall):
                             item['_cs_api'] = self
                             list_ret.append(getattr(csobjects, key.capitalize())(item))
                         except:
-                            if ret.has_key('jobid'):
+                            if 'jobid' in ret:
                                 return getattr(csobjects, 'AsyncJob')(ret) 
                             else:
                                 return ret

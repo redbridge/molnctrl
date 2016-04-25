@@ -18,10 +18,13 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 """
+from __future__ import absolute_import
+from __future__ import print_function
 import os, pickle, tempfile
-import cachemaker
-from connection import CSApi
-from config import Config
+from . import cachemaker
+from .connection import CSApi
+from .config import Config
+import six
 #
 # usage:
 # In [1]: import molnctrl
@@ -99,10 +102,10 @@ def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=
             apicache = cachemaker.monkeycache(c.list_apis())
             pickle.dump(apicache, open(os.path.join(d, cache_file), "wb"))
     except Exception as e:
-        print "Unable to create an api cache: %s" % e
+        print("Unable to create an api cache: %s" % e)
 
-    for verb, methods in apicache.iteritems():
+    for verb, methods in six.iteritems(apicache):
         if isinstance(methods, dict):
-            for method in methods.iterkeys():
+            for method in six.iterkeys(methods):
                 _create_api_method(CSApi, "%s_%s" % (verb, method), methods[method])
     return CSApi(api_url, api_key, api_secret, asyncblock, timeout, req_method)

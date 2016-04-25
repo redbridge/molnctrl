@@ -17,13 +17,15 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from __future__ import absolute_import
+from __future__ import print_function
 try:
     import json
     import os
     import types
-except ImportError, e:
+except ImportError as e:
     import sys
-    print "ImportError", e
+    print("ImportError", e)
     sys.exit(1)
 
 def getvalue(dictionary, key):
@@ -35,7 +37,7 @@ def getvalue(dictionary, key):
 
 def splitcsvstring(string):
     if string is not None:
-        return filter(lambda x: x.strip() != '', string.split(','))
+        return [x for x in string.split(',') if x.strip() != '']
     else:
         return []
 
@@ -71,8 +73,8 @@ def loadcache(json_file):
     f.close()
     try:
         apicache = json.loads(data)
-    except ValueError, e:
-        print "Error processing json:", json_file, e
+    except ValueError as e:
+        print("Error processing json:", json_file, e)
         return {}
     return apicache
 
@@ -81,7 +83,7 @@ def monkeycache(apis):
     """
     Feed this a dictionary of api bananas, it spits out processed cache
     """
-    if isinstance(type(apis), types.NoneType) or apis is None:
+    if isinstance(type(apis), type(None)) or apis is None:
         return {}
 
     verbs = set()
@@ -91,7 +93,7 @@ def monkeycache(apis):
 
     apilist = apis['api']
     if apilist is None:
-        print "[monkeycache] Server response issue, no apis found"
+        print("[monkeycache] Server response issue, no apis found")
 
     for api in apilist:
         name = getvalue(api, 'name')
@@ -162,9 +164,9 @@ def main(json_file):
 
 if __name__ == "__main__":
     cache_file = config_fields['core']['cache_file']
-    print "[cachemaker] Pre-caching using user's cloudmonkey cache", cache_file
+    print("[cachemaker] Pre-caching using user's cloudmonkey cache", cache_file)
     if os.path.exists(cache_file):
         main(cache_file)
     else:
-        print "[cachemaker] Unable to cache apis, file not found", cache_file
-        print "[cachemaker] Run cloudmonkey sync to generate cache"
+        print("[cachemaker] Unable to cache apis, file not found", cache_file)
+        print("[cachemaker] Run cloudmonkey sync to generate cache")

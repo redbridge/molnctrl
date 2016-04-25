@@ -19,8 +19,9 @@ specific language governing permissions and limitations
 under the License.
 """
 
+from __future__ import absolute_import
 import os
-import ConfigParser
+import six.moves.configparser
 
 class Config(object):
     """ Provides config file support
@@ -30,7 +31,7 @@ class Config(object):
         for loc in os.curdir, os.path.expanduser("~"), os.environ.get('PWD'), '':
             if os.path.exists(os.path.join(loc,config_file)):
                 try:
-                    config = ConfigParser.ConfigParser()
+                    config = six.moves.configparser.ConfigParser()
                     config.read(os.path.join(loc,config_file))
                     return config
                 except IOError:

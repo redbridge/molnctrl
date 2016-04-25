@@ -18,6 +18,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 """
+from __future__ import absolute_import
 import sys, time
 from exceptions import *
 
@@ -270,8 +271,8 @@ class AsyncJob(CloudStackObject):
             status = self.status
             if status == 'succeded':
                 try:
-                    self.result.values()[0]['_cs_api'] = self._cs_api
-                    return getattr(sys.modules[__name__], self.result.keys()[0].capitalize())(self.result.values()[0])
+                    list(self.result.values())[0]['_cs_api'] = self._cs_api
+                    return getattr(sys.modules[__name__], list(self.result.keys())[0].capitalize())(list(self.result.values())[0])
                 except:
                     return status
             elif status == 'pending':

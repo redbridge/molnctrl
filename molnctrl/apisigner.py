@@ -18,9 +18,12 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 """
+from __future__ import absolute_import
 import hashlib, hmac, string, base64, urllib
 import requests
 import json, urllib
+import six
+from six.moves import zip
 
 
 class SignedAPICall(object):
@@ -37,7 +40,7 @@ class SignedAPICall(object):
 
     def request(self, args):
         args['apiKey'] = self.api_key
-        for k, v in args.iteritems():
+        for k, v in six.iteritems(args):
             args[k] = self.remove_non_ascii(v)
         self._sign(args)
         self._build_post_request(args)
@@ -47,7 +50,7 @@ class SignedAPICall(object):
             return self._http_post()
 
     def _sign(self, args):
-        params = zip(args.keys(), args.values())
+        params = list(zip(list(args.keys()), list(args.values())))
         params.sort(key=lambda k: str.lower(k[0]))
         hash_str = "&".join(
                     ["=".join(
