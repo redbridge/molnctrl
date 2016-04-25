@@ -12,6 +12,8 @@ Usage::
 
 Changelog
 =========
+* 0.7.1 2016-04-25 fix requirements
+
 * 0.7.0 2016-04-25 Modernized to use six (for Python 3 compatibility)
 
 * 0.6.0 2015-02-10 Add support for POST

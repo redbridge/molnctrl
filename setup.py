@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from setuptools import setup, find_packages
 
 name = 'molnctrl'
-version = '0.7.0'
+version = '0.7.1'
 
 setup(name = name,
       version = version,
@@ -13,6 +13,7 @@ setup(name = name,
       url='http://github.com/redbridge/molnctrl',
       install_requires = [
         'requests',
+        'six'
       ],
       packages=['molnctrl'],
       classifiers=[
