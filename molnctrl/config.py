@@ -29,7 +29,7 @@ class Config(object):
     def __init__(self):
         config_file = os.getenv('MOLN_CONF', '.moln.conf')
         for loc in os.curdir, os.path.expanduser("~"), os.environ.get('PWD'), '':
-            if if loc and os.path.exists(os.path.join(loc,config_file)):
+            if loc and os.path.exists(os.path.join(loc,config_file)):
                 try:
                     config = six.moves.configparser.ConfigParser()
                     config.read(os.path.join(loc,config_file))

@@ -12,7 +12,9 @@ Usage::
 
 Changelog
 =========
-* 0.7.3 2017-01-25 Minor bug fix
+* 0.7.5 2017-01-25 Fix stupid error in 0.7.3
+
+* 0.7.4 2017-01-25 Minor bug fix
 
 * 0.7.3 2106-09-28 Actually fix import error
 
