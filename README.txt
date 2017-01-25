@@ -12,7 +12,11 @@ Usage::
 
 Changelog
 =========
-* 0.7.1 2016-04-25 fix requirements
+* 0.7.3 2106-09-28 Actually fix import error
+
+* 0.7.2 2106-09-27 Fix import error
+
+* 0.7.1 2016-04-25 Fix requirements
 
 * 0.7.0 2016-04-25 Modernized to use six (for Python 3 compatibility)
 

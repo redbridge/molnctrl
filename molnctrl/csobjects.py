@@ -20,7 +20,7 @@ under the License.
 """
 from __future__ import absolute_import
 import sys, time
-from exceptions import *
+from .csexceptions import *
 
 class CloudStackObject(object):
     def __init__(self, dictionary):
