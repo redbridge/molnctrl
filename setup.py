@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from setuptools import setup
 
 name = 'molnctrl'
-version = '0.7.6'
+version = '0.7.7'
 
 setup(name=name,
       version=version,
@@ -14,7 +14,7 @@ setup(name=name,
       install_requires=[
           'requests',
           'six',
-          'futurize',
+          'future',
       ],
       packages=['molnctrl'],
       classifiers=[

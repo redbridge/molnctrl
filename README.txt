@@ -12,6 +12,8 @@ Usage::
 
 Changelog
 =========
+* 0.7.7 2017-03-17 Fix package name
+
 * 0.7.6 2017-03-17 Futurize
 
 * 0.7.5 2017-01-25 Fix stupid error in 0.7.3
