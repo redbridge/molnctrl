@@ -20,7 +20,9 @@ under the License.
 """
 from __future__ import absolute_import
 from __future__ import print_function
-import string, base64, urllib, json, urllib, sys
+from future import standard_library
+standard_library.install_aliases()
+import string, base64, urllib.request, urllib.parse, urllib.error, json, urllib.request, urllib.parse, urllib.error, sys
 import requests
 from . import csobjects
 from .csexceptions import *
@@ -65,7 +67,7 @@ class CSApi(SignedAPICall):
     def _ret(self, ret):
         # Then create a list of classes
         list_ret = []
-        for key in ret.keys():
+        for key in list(ret.keys()):
             if not key == 'count':
                 if key == 'success':
                     if ret['success'] == 'true':

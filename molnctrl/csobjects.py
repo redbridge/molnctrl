@@ -19,12 +19,13 @@ specific language governing permissions and limitations
 under the License.
 """
 from __future__ import absolute_import
+from builtins import object
 import sys, time
 from .csexceptions import *
 
 class CloudStackObject(object):
     def __init__(self, dictionary):
-        for k,v in dictionary.items():
+        for k,v in list(dictionary.items()):
             setattr(self, k, v)
 
     def __str__(self):
@@ -36,7 +37,7 @@ class CloudStackObject(object):
 
 class Account(CloudStackObject):
     def __init__(self, dictionary):
-        for k,v in dictionary.items():
+        for k,v in list(dictionary.items()):
             setattr(self, k, v)
         self.users = self._get_users(self.user)
 
@@ -104,7 +105,7 @@ class Vpnuser(CloudStackObject):
 class Virtualmachine(CloudStackObject):
     """ This class represents a virtual machine"""
     def __init__(self, dictionary):
-        for k,v in dictionary.items():
+        for k,v in list(dictionary.items()):
             setattr(self, k, v)
         self.nics = self._get_nics(self.nic)
         self.tags = self._get_tags(self.tags)
@@ -175,7 +176,7 @@ class Template(CloudStackObject):
 
 class Network(CloudStackObject):
     def __init__(self, dictionary):
-        for k,v in dictionary.items():
+        for k,v in list(dictionary.items()):
             setattr(self, k, v)
         self.services = self._get_services(self.service)
 
@@ -187,7 +188,7 @@ class Network(CloudStackObject):
 
 class Service(CloudStackObject):
     def __init__(self, dictionary):
-        for k,v in dictionary.items():
+        for k,v in list(dictionary.items()):
             setattr(self, k, v)
         try:
             self.capabilities = self._get_capabilities(self.capability)
@@ -257,7 +258,7 @@ class Ipaddress(CloudStackObject):
 
 class AsyncJob(CloudStackObject):
     def __init__(self, dictionary):
-        for k,v in dictionary.items():
+        for k,v in list(dictionary.items()):
             setattr(self, k, v)
 
     def __str__(self):

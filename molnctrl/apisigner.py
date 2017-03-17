@@ -19,9 +19,14 @@ specific language governing permissions and limitations
 under the License.
 """
 from __future__ import absolute_import
-import hashlib, hmac, string, base64, urllib
+from future import standard_library
+standard_library.install_aliases()
+from builtins import zip
+from builtins import str
+from builtins import object
+import hashlib, hmac, string, base64, urllib.request, urllib.parse, urllib.error
 import requests
-import json, urllib
+import json, urllib.request, urllib.parse, urllib.error
 import six
 from six.moves import zip
 
@@ -56,7 +61,7 @@ class SignedAPICall(object):
                     ["=".join(
                         [str.lower(r[0]),
                          str.lower(
-                                urllib.quote_plus(str(r[1]))
+                                urllib.parse.quote_plus(str(r[1]))
                          ).replace("+", "%20")]
                     ) for r in params]
         )
