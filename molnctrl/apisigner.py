@@ -65,8 +65,8 @@ class SignedAPICall(object):
                          ).replace("+", "%20")]
                     ) for r in params]
         )
-        signature = base64.encodestring(hmac.new(self.api_secret,
-                                                 hash_str,
+        signature = base64.encodestring(hmac.new(self.api_secret.encode('utf-8'),
+                                                 hash_str.encode('utf-8'),
                                                  hashlib.sha1).digest()).strip()
         self.signature = signature
 
