@@ -78,32 +78,29 @@ def Initialize(api_key, api_secret, api_host="localhost", api_port=443, api_ssl=
     else:
         proto = "http"
     api_url = "%s://%s:%s/client/api" % (proto, api_host, api_port)
-    try:
-        if os.access(os.path.expanduser("~") , os.W_OK):
-            d = os.path.expanduser("~")
-        else:
-            d = tempfile.gettempdir()
-        cache_file = os.getenv('MOLNCTRL_CACHE') or '.molnctrl_cache'
-        if os.path.exists(os.path.join(d, cache_file)):
-            apicache = pickle.load(open( os.path.join(d, cache_file), "rb" ))
-        else:
-            method = {'description': u'lists all available apis on the server, provided by the Api Discovery plugin',
-             'isasync': False,
-             'name': u'listApis',
-             'params': [{'description': u'API name',
-               'length': 255,
-               'name': u'name',
-               'related': [],
-               'required': False,
-               'type': u'string'}],
-             'related': [],
-             'requiredparams': []}
-            _create_api_method(CSApi, "list_apis", method)
-            c = CSApi(api_url, api_key, api_secret, asyncblock)
-            apicache = cachemaker.monkeycache(c.list_apis())
-            pickle.dump(apicache, open(os.path.join(d, cache_file), "wb"))
-    except Exception as e:
-        print("Unable to create an api cache: %s" % e)
+    if os.access(os.path.expanduser("~") , os.W_OK):
+        d = os.path.expanduser("~")
+    else:
+        d = tempfile.gettempdir()
+    cache_file = os.getenv('MOLNCTRL_CACHE') or '.molnctrl_cache'
+    if os.path.exists(os.path.join(d, cache_file)):
+        apicache = pickle.load(open( os.path.join(d, cache_file), "rb" ))
+    else:
+        method = {'description': u'lists all available apis on the server, provided by the Api Discovery plugin',
+            'isasync': False,
+            'name': u'listApis',
+            'params': [{'description': u'API name',
+            'length': 255,
+            'name': u'name',
+            'related': [],
+            'required': False,
+            'type': u'string'}],
+            'related': [],
+            'requiredparams': []}
+        _create_api_method(CSApi, "list_apis", method)
+        c = CSApi(api_url, api_key, api_secret, asyncblock)
+        apicache = cachemaker.monkeycache(c.list_apis())
+        pickle.dump(apicache, open(os.path.join(d, cache_file), "wb"))
 
     for verb, methods in six.iteritems(apicache):
         if isinstance(methods, dict):
